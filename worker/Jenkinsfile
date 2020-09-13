@@ -19,7 +19,7 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Testing...'
-        sh 'mvn -f worker/pom.xml test'
+        sh 'mvn -f worker/pom.xml clean test'
       }
     }
 
@@ -29,6 +29,12 @@ pipeline {
         sh 'mvn -f worker/pom.xml package -DskipTests'
         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
+    }
+  }
+
+  post {
+    always {
+      echo 'Pipeline for worker is complete...'
     }
   }
 
