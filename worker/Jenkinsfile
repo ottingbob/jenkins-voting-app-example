@@ -1,12 +1,22 @@
 
 pipeline {
-  agent any
+  agent {
+    docker {
+      image "maven:3.6.1-jdk-8-alpine"
+      // Setup a volume to cache maven artifacts for subsequent builds
+      args '-v $HOME/.m2:/root/.m2'
+    }
+  }
 
   // triggers { pollSCM('H/2 * * * *') }
 
+  /*
+  No longer using the tools section...
+  
   tools {
     maven 'Maven 3.6.3'
   }
+  */
 
   stages {
     stage('Build') {
