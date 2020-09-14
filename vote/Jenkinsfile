@@ -2,9 +2,12 @@
 pipeline {
 
   agent {
-    // docker { image 'python:2.7-alpine' }
+    docker { 
+      image 'python:2.7-alpine'
+      args '--user root'
+    }
     // docker { image 'python:3.5-alpine' }
-    docker { image 'python:2.7.16-slim' }
+    // docker { image 'python:2.7.16-slim' }
   }
 
   stages {
@@ -14,7 +17,7 @@ pipeline {
       }
       steps {
         echo 'Installing Deps...'
-        sh 'cd vote && pip install --user -r requirements.txt'
+        sh 'cd vote && pip install -r requirements.txt'
       }
     }
 
@@ -25,7 +28,8 @@ pipeline {
       steps {
         echo 'Testing...'
         dir('vote') {
-          sh 'nose tests -v'
+          sh 'pip install -r requirements.txt'
+          sh 'nosetests -v'
         }
       }
     }
