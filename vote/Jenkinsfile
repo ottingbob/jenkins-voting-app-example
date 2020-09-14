@@ -1,0 +1,39 @@
+
+pipeline {
+
+  agent {
+    docker { image 'python:2.7-alpine' }
+  }
+
+  stages {
+    stage('Pip Install') {
+      when {
+        changeset "**/vote/**"
+      }
+      steps {
+        echo 'Installing Deps...'
+        sh 'cd vote && pip install -r ./app/requirements.txt'
+      }
+    }
+
+    stage('Test') {
+      when {
+        changeset "**/vote/**"
+      }
+      steps {
+        echo 'Testing...'
+        dir('vote') {
+          sh 'nose tests -v'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      echo 'Pipeline for python worker is complete...'
+    }
+  }
+
+}
+
